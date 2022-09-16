@@ -46,7 +46,17 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   bool liga = true;
   dynamic dado = 0;
   String pubTopic = 'Virgulino';
-  bool motor_ligado = true;
+  bool modo_manual = true;
+  bool reset = false;
+  bool start = false;
+  bool stop = false;
+  bool direcao = false;
+  bool eixo_1 = false;
+  bool eixo_2 = false;
+  bool eixo_3 = false;
+  bool eixo_4 = false;
+  bool eixo_5 = false;
+  bool eixo_6 = false;
 
   aquisicao2() async {
     client.logging(on: true);
@@ -130,11 +140,11 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                        child: Center(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                        child: const Center(
                           child: Text(
                             'DL ROBO SIX',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w700,
                               fontFamily: 'Arial',
@@ -167,25 +177,29 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      //MODO MANUAL
                       Container(
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.green,
+                          color: modo_manual ? Colors.green : Colors.red,
                         ),
                         height: 70,
                         width: 70,
                         child: Center(
                           child: IconButton(
+                            tooltip: "manual",
                             onPressed: () {
+                              modo_manual = !modo_manual;
+
+                              setState(() {
+                                builder2.clear();
+
+                                builder2.addUTF16String(
+                                  modo_manual.toString(),
+                                );
+                              });
                               client.publishMessage("manual",
                                   MqttQos.atLeastOnce, builder2.payload!);
-                              setState(() {
-                                motor_ligado = !motor_ligado;
-                                builder2.clear();
-                                motor_ligado
-                                    ? builder2.addUTF16String("true")
-                                    : builder2.addUTF16String("false");
-                              });
                             },
                             icon: const Icon(
                               Icons.cached,
@@ -193,25 +207,29 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                           ),
                         ),
                       ),
+                      //RESET
                       Container(
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.green,
+                          color: reset ? Colors.green : Colors.red,
                         ),
                         height: 70,
                         width: 70,
                         child: Center(
                           child: IconButton(
+                            tooltip: "reset",
                             onPressed: () {
-                              client.publishMessage("manual",
-                                  MqttQos.atLeastOnce, builder2.payload!);
+                              reset = !reset;
+
                               setState(() {
-                                motor_ligado = !motor_ligado;
                                 builder2.clear();
-                                motor_ligado
-                                    ? builder2.addUTF16String("true")
-                                    : builder2.addUTF16String("false");
+
+                                builder2.addUTF16String(
+                                  reset.toString(),
+                                );
                               });
+                              client.publishMessage("reset",
+                                  MqttQos.atLeastOnce, builder2.payload!);
                             },
                             icon: const Icon(
                               Icons.cached,
@@ -219,25 +237,29 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                           ),
                         ),
                       ),
+                      //START
                       Container(
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.green,
+                          color: start ? Colors.green : Colors.red,
                         ),
                         height: 70,
                         width: 70,
                         child: Center(
                           child: IconButton(
+                            tooltip: "start",
                             onPressed: () {
-                              client.publishMessage("manual",
-                                  MqttQos.atLeastOnce, builder2.payload!);
+                              start = !start;
+
                               setState(() {
-                                motor_ligado = !motor_ligado;
                                 builder2.clear();
-                                motor_ligado
-                                    ? builder2.addUTF16String("true")
-                                    : builder2.addUTF16String("false");
+
+                                builder2.addUTF16String(
+                                  start.toString(),
+                                );
                               });
+                              client.publishMessage("start",
+                                  MqttQos.atLeastOnce, builder2.payload!);
                             },
                             icon: const Icon(
                               Icons.cached,
@@ -245,25 +267,29 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                           ),
                         ),
                       ),
+                      //STOP
                       Container(
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.green,
+                          color: stop ? Colors.green : Colors.red,
                         ),
                         height: 70,
                         width: 70,
                         child: Center(
                           child: IconButton(
+                            tooltip: "stop",
                             onPressed: () {
-                              client.publishMessage("manual",
-                                  MqttQos.atLeastOnce, builder2.payload!);
+                              stop = !stop;
+
                               setState(() {
-                                motor_ligado = !motor_ligado;
                                 builder2.clear();
-                                motor_ligado
-                                    ? builder2.addUTF16String("true")
-                                    : builder2.addUTF16String("false");
+
+                                builder2.addUTF16String(
+                                  stop.toString(),
+                                );
                               });
+                              client.publishMessage("stop", MqttQos.atLeastOnce,
+                                  builder2.payload!);
                             },
                             icon: const Icon(
                               Icons.cached,
@@ -271,25 +297,29 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                           ),
                         ),
                       ),
+                      //DIREÇÃO
                       Container(
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.green,
+                          color: direcao ? Colors.green : Colors.red,
                         ),
                         height: 70,
                         width: 70,
                         child: Center(
                           child: IconButton(
+                            tooltip: "direção",
                             onPressed: () {
-                              client.publishMessage("manual",
-                                  MqttQos.atLeastOnce, builder2.payload!);
+                              direcao = !direcao;
+
                               setState(() {
-                                motor_ligado = !motor_ligado;
                                 builder2.clear();
-                                motor_ligado
-                                    ? builder2.addUTF16String("true")
-                                    : builder2.addUTF16String("false");
+
+                                builder2.addUTF16String(
+                                  direcao.toString(),
+                                );
                               });
+                              client.publishMessage("direcao",
+                                  MqttQos.atLeastOnce, builder2.payload!);
                             },
                             icon: const Icon(
                               Icons.cached,
@@ -297,25 +327,29 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                           ),
                         ),
                       ),
+                      //EIXO_1
                       Container(
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.green,
+                          color: eixo_1 ? Colors.green : Colors.red,
                         ),
                         height: 70,
                         width: 70,
                         child: Center(
                           child: IconButton(
+                            tooltip: "Eixo 1",
                             onPressed: () {
-                              client.publishMessage("manual",
-                                  MqttQos.atLeastOnce, builder2.payload!);
+                              eixo_1 = !eixo_1;
+
                               setState(() {
-                                motor_ligado = !motor_ligado;
                                 builder2.clear();
-                                motor_ligado
-                                    ? builder2.addUTF16String("true")
-                                    : builder2.addUTF16String("false");
+
+                                builder2.addUTF16String(
+                                  eixo_1.toString(),
+                                );
                               });
+                              client.publishMessage("eixo1",
+                                  MqttQos.atLeastOnce, builder2.payload!);
                             },
                             icon: const Icon(
                               Icons.cached,
@@ -323,25 +357,29 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                           ),
                         ),
                       ),
+                      //EIXO_2
                       Container(
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.green,
+                          color: eixo_2 ? Colors.green : Colors.red,
                         ),
                         height: 70,
                         width: 70,
                         child: Center(
                           child: IconButton(
+                            tooltip: "Eixo 2",
                             onPressed: () {
-                              client.publishMessage("manual",
-                                  MqttQos.atLeastOnce, builder2.payload!);
+                              eixo_2 = !eixo_2;
+
                               setState(() {
-                                motor_ligado = !motor_ligado;
                                 builder2.clear();
-                                motor_ligado
-                                    ? builder2.addUTF16String("true")
-                                    : builder2.addUTF16String("false");
+
+                                builder2.addUTF16String(
+                                  eixo_2.toString(),
+                                );
                               });
+                              client.publishMessage("eixo2",
+                                  MqttQos.atLeastOnce, builder2.payload!);
                             },
                             icon: const Icon(
                               Icons.cached,
@@ -349,25 +387,29 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                           ),
                         ),
                       ),
+                      //EIXO_3
                       Container(
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.green,
+                          color: eixo_3 ? Colors.green : Colors.red,
                         ),
                         height: 70,
                         width: 70,
                         child: Center(
                           child: IconButton(
+                            tooltip: "Eixo 3",
                             onPressed: () {
-                              client.publishMessage("manual",
-                                  MqttQos.atLeastOnce, builder2.payload!);
+                              eixo_3 = !eixo_3;
+
                               setState(() {
-                                motor_ligado = !motor_ligado;
                                 builder2.clear();
-                                motor_ligado
-                                    ? builder2.addUTF16String("true")
-                                    : builder2.addUTF16String("false");
+
+                                builder2.addUTF16String(
+                                  eixo_3.toString(),
+                                );
                               });
+                              client.publishMessage("eixo3",
+                                  MqttQos.atLeastOnce, builder2.payload!);
                             },
                             icon: const Icon(
                               Icons.cached,
@@ -375,25 +417,29 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                           ),
                         ),
                       ),
+                      //EIXO_4
                       Container(
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.green,
+                          color: eixo_4 ? Colors.green : Colors.red,
                         ),
                         height: 70,
                         width: 70,
                         child: Center(
                           child: IconButton(
+                            tooltip: "Eixo 4",
                             onPressed: () {
-                              client.publishMessage("manual",
-                                  MqttQos.atLeastOnce, builder2.payload!);
+                              eixo_4 = !eixo_4;
+
                               setState(() {
-                                motor_ligado = !motor_ligado;
                                 builder2.clear();
-                                motor_ligado
-                                    ? builder2.addUTF16String("true")
-                                    : builder2.addUTF16String("false");
+
+                                builder2.addUTF16String(
+                                  eixo_4.toString(),
+                                );
                               });
+                              client.publishMessage("eixo4",
+                                  MqttQos.atLeastOnce, builder2.payload!);
                             },
                             icon: const Icon(
                               Icons.cached,
@@ -401,25 +447,29 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                           ),
                         ),
                       ),
+                      //EIXO_5
                       Container(
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.green,
+                          color: eixo_5 ? Colors.green : Colors.red,
                         ),
                         height: 70,
                         width: 70,
                         child: Center(
                           child: IconButton(
+                            tooltip: "Eixo 5",
                             onPressed: () {
-                              client.publishMessage("manual",
-                                  MqttQos.atLeastOnce, builder2.payload!);
+                              eixo_5 = !eixo_5;
+
                               setState(() {
-                                motor_ligado = !motor_ligado;
                                 builder2.clear();
-                                motor_ligado
-                                    ? builder2.addUTF16String("true")
-                                    : builder2.addUTF16String("false");
+
+                                builder2.addUTF16String(
+                                  eixo_5.toString(),
+                                );
                               });
+                              client.publishMessage("eixo5",
+                                  MqttQos.atLeastOnce, builder2.payload!);
                             },
                             icon: const Icon(
                               Icons.cached,
@@ -427,25 +477,29 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                           ),
                         ),
                       ),
+                      //EIXO_6
                       Container(
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.green,
+                          color: eixo_6 ? Colors.green : Colors.red,
                         ),
                         height: 70,
                         width: 70,
                         child: Center(
                           child: IconButton(
+                            tooltip: "Eixo 6",
                             onPressed: () {
-                              client.publishMessage("manual",
-                                  MqttQos.atLeastOnce, builder2.payload!);
+                              eixo_6 = !eixo_6;
+
                               setState(() {
-                                motor_ligado = !motor_ligado;
                                 builder2.clear();
-                                motor_ligado
-                                    ? builder2.addUTF16String("true")
-                                    : builder2.addUTF16String("false");
+
+                                builder2.addUTF16String(
+                                  eixo_6.toString(),
+                                );
                               });
+                              client.publishMessage("eixo6",
+                                  MqttQos.atLeastOnce, builder2.payload!);
                             },
                             icon: const Icon(
                               Icons.cached,
